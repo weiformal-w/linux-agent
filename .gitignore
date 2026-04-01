@@ -1,0 +1,9 @@
+node_modules/
+*.log
+.DS_Store
+.env
+*.md
+!README.md
+session-*.json
+*.json
+!package.json
