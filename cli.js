@@ -245,6 +245,11 @@ async function handleCommand(input) {
       break
     case '/exit':
     case 'exit':
+      // 自动保存当前会话
+      if (conversationHistory.length > 0) {
+        await saveSession()
+      }
+      console.log(chalk.yellow('\n👋 再见！\n'))
       return false
     default:
       console.log(chalk.red('\n❌ 未知命令，输入 /help 查看帮助\n'))
@@ -264,7 +269,9 @@ async function main() {
     console.log(chalk.gray(`💡 发现 ${sessions.length} 个历史会话，使用 /sessions 查看\n`))
   }
 
-  while (true) {
+  let shouldExit = false
+
+  while (!shouldExit) {
     const prompt = await new Promise((resolve) => {
       const prefix = currentSessionId ? chalk.gray(`[${currentSessionId.substring(0, 8)}] `) : ''
       rl.question(prefix + chalk.green('❯ '), resolve)
@@ -275,17 +282,15 @@ async function main() {
     // 处理命令
     if (prompt.startsWith('/')) {
       const shouldContinue = await handleCommand(prompt)
-      if (!shouldContinue) break
+      if (!shouldContinue) {
+        shouldExit = true
+        break
+      }
       continue
     }
 
     if (prompt.toLowerCase() === 'exit') {
-      // 自动保存当前会话
-      if (conversationHistory.length > 0) {
-        await saveSession()
-      }
-      console.log(chalk.yellow('\n👋 再见！\n'))
-      rl.close()
+      shouldExit = true
       break
     }
 
@@ -323,6 +328,9 @@ async function main() {
 
     console.log()
   }
+
+  // 确保 readline 被正确关闭
+  rl.close()
 }
 
 main().catch(console.error)

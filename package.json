@@ -8,7 +8,9 @@
     "linux-agent": "./cli.js"
   },
   "scripts": {
-    "start": "node cli.js",
+    "start": "node --no-experimental-strip-types cli.js",
+    "start:legacy": "node cli.js",
+    "test": "node --no-experimental-strip-types -e \"import('./cli.js').then(() => console.log('✓ SDK imports successfully'))\"",
     "postinstall": "echo 'Skipping postinstall script for @shipany/open-agent-sdk'"
   },
   "dependencies": {

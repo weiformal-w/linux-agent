@@ -1,4 +1,10 @@
-# Linux Agent
+# 🤖 Linux Agent
+
+> Natural language interface for Linux system operations powered by Claude AI
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node Version](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org)
+[![SDK](https://img.shields.io/badge/sdk-@shipany/open--agent--sdk-blue)](https://github.com/shipany-ai/open-agent-sdk)
 
 用自然语言操作 Linux 系统的 AI Agent，支持完整的会话管理功能。
 
@@ -143,7 +149,185 @@ linux-agent/
 - 可以随时 `/new` 创建新会话处理不同任务
 - 退出程序时会自动保存当前会话
 
+## 🔧 SDK 修复说明
+
+本项目修复了 `@shipany/open-agent-sdk` v0.1.7 的两个关键 bug：
+
+### 🐛 Bug 1: .d.ts 文件导入错误
+**问题**: SDK 错误地将 TypeScript 声明文件作为 ES module 导入
+```
+Error: ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING
+```
+
+**修复**: 移除了 `Box.js` 和 `ScrollBox.js` 中对 `global.d.ts` 的错误导入
+```javascript
+// 修复前
+import '../global.d.ts';
+
+// 修复后
+// import '../global.d.ts'; // Removed: .d.ts files should not be imported in JS
+```
+
+### 🐛 Bug 2: Bun.semver 兼容性问题
+**问题**: Node.js 环境中缺少 `Bun.semver` 导致运行时错误
+```
+TypeError: Cannot read properties of undefined (reading 'satisfies')
+```
+
+**修复**: 在 `setup-globals.js` 中为 Node.js 环境添加了 semver 支持
+```javascript
+// 添加了 semver fallback 机制
+if (typeof _global.Bun === 'undefined') {
+    let _semver = require('semver');
+    _global.Bun = {
+        env: process.env,
+        version: '0.0.0',
+        sleep: (ms) => new Promise(r => setTimeout(r, ms)),
+        semver: _semver, // 添加 semver 支持
+    };
+}
+```
+
+### 🔨 如何在其他项目中使用修复后的 SDK
+
+#### 方法 1: 复制修复的文件
+```bash
+# 从本项目复制修复的 SDK
+cp -r node_modules/@shipany/open-agent-sdk /your-project/node_modules/@shipany/
+```
+
+#### 方法 2: 使用自动脚本
+```bash
+# Linux/Mac
+./create-agent.sh my-new-agent
+
+# Windows
+create-agent.bat my-new-agent
+```
+
+脚本会自动：
+1. 创建项目结构
+2. 安装依赖
+3. 应用 SDK 修复
+4. 生成基础模板
+
+#### 方法 3: 手动修复
+在你的项目中找到以下文件并应用相同的修复：
+- `node_modules/@shipany/open-agent-sdk/dist/ink/components/Box.js`
+- `node_modules/@shipany/open-agent-sdk/dist/ink/components/ScrollBox.js`
+- `node_modules/@shipany/open-agent-sdk/dist/setup-globals.js`
+
 ## 📝 开发
+
+### 基础开发
+
+```bash
+# 查看日志
+DEBUG=* npm start
+
+# 修改代码后重启
+npm start
+```
+
+### 调用 Linux Agent 的 API
+
+如果你想在自己的代码中调用 Linux Agent：
+
+```javascript
+import { createAgent } from '@shipany/open-agent-sdk'
+
+// 创建 Agent 实例
+const agent = createAgent({
+  model: 'claude-sonnet-4-6',
+  systemPrompt: '你是一个 Linux 系统管理助手',
+  permissionMode: 'acceptEdits',
+  allowedTools: ['Read', 'Edit', 'Bash', 'Glob', 'Grep', 'Write']
+})
+
+// 发送查询
+const result = await agent.prompt('查看系统内存使用')
+console.log(result.text)
+
+// 使用特定工具
+const toolResult = await agent.prompt('用 Bash 工具执行 ls -la')
+```
+
+### 自定义 System Prompt
+
+编辑 `cli.js` 中的 `LINUX_SYSTEM_PROMPT` 来定制 Agent 的行为：
+
+```javascript
+const LINUX_SYSTEM_PROMPT = `你是一个专业的 Linux 系统管理助手。
+// 定制你的 prompt
+`
+```
+
+### 添加自定义工具
+
+```javascript
+const agent = createAgent({
+  // ... 其他配置
+  allowedTools: [
+    'Read', 'Edit', 'Bash', 'Glob', 'Grep', 'Write',
+    // 添加自定义工具
+  ]
+})
+```
+
+### 项目结构
+
+```
+linux-agent/
+├── cli.js                 # 主程序入口
+├── session-manager.js     # 会话管理模块
+├── package.json          # 依赖配置
+├── .npmrc                # npm 配置 (ignore-scripts=true)
+├── create-agent.sh      # 创建新项目的脚本 (Linux/Mac)
+├── create-agent.bat     # 创建新项目的脚本 (Windows)
+├── create-new-app.md    # 详细创建指南
+└── README.md            # 项目说明
+```
+
+## 🌟 使用场景
+
+### 系统运维
+- 自动化系统监控和告警
+- 批量服务器配置管理
+- 日志分析和错误排查
+
+### 开发辅助
+- 代码重构和格式化
+- 自动化测试和部署
+- 项目文档生成
+
+### 学习工具
+- Linux 命令学习和实践
+- 系统管理最佳实践
+- 脚本自动化示例
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
+
+## 🙏 致谢
+
+- [@shipany/open-agent-sdk](https://github.com/shipany-ai/open-agent-sdk) - 提供强大的 Agent SDK
+- [Anthropic Claude](https://www.anthropic.com) - 提供 AI 能力
+
+## 📮 联系方式
+
+- 作者: weiformal-w
+- GitHub: [@weiformal-w](https://github.com/weiformal-w)
+
+---
+
+⭐ 如果这个项目对你有帮助，请给个 Star！
 
 ```bash
 # 查看日志
