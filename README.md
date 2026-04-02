@@ -26,19 +26,59 @@
 
 ## 📦 安装
 
+### ⚠️ 重要：SDK 需要修复
+
+此项目依赖的 `@shipany/open-agent-sdk` 有编译问题，需要修复后才能使用。
+
+### 方法 1: 使用自动安装脚本（推荐）
+
+**Linux/Mac:**
 ```bash
-# 1. 克隆或上传到 Linux 服务器
+git clone https://github.com/weiformal-w/linux-agent.git
+cd linux-agent
+chmod +x install.sh
+./install.sh
+```
+
+**Windows:**
+```cmd
+git clone https://github.com/weiformal-w/linux-agent.git
+cd linux-agent
+install.bat
+```
+
+### 方法 2: 手动安装
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/weiformal-w/linux-agent.git
 cd linux-agent
 
-# 2. 安装依赖
+# 2. 临时修改 .npmrc 允许脚本运行
+echo "ignore-scripts=false" > .npmrc
+
+# 3. 安装依赖
 npm install
 
-# 3. 设置环境变量
-export ANTHROPIC_API_KEY=sk-ant-xxx
+# 4. 运行修复脚本
+node fix-sdk.js
 
-# 4. 启动
+# 5. 验证修复
+npm run test:sdk
+
+# 6. 启动
 npm start
 ```
+
+### 📝 修复说明
+
+如果启动时遇到 `.d.ts` 导入错误，运行：
+
+```bash
+node fix-sdk.js
+```
+
+详细修复说明请查看 [FIX-GUIDE.md](./FIX-GUIDE.md)
 
 ## 🚀 使用指南
 
