@@ -1,4 +1,11 @@
+# Ignore all node_modules
 node_modules/
+
+# BUT: Allow fixed SDK files
+!node_modules/@shipany/open-agent-sdk/dist/ink/components/Box.js
+!node_modules/@shipany/open-agent-sdk/dist/ink/components/ScrollBox.js
+!node_modules/@shipany/open-agent-sdk/dist/setup-globals.js
+
 *.log
 .DS_Store
 .env
