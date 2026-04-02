@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node cli.js",
     "fix": "node fix-sdk.js",
+    "diagnose": "node diagnose-api.js",
     "install:fixed": "bash install.sh || bash install.bat || node fix-sdk.js",
     "test": "node -e \"import('./cli.js').then(() => console.log('✓ SDK imports successfully'))\"",
     "test:sdk": "node -e \"import('@shipany/open-agent-sdk').then(() => console.log('✅ SDK imports successfully'))\""
