@@ -8,9 +8,13 @@
     "linux-agent": "./cli.js"
   },
   "scripts": {
-    "start": "node --no-experimental-strip-types cli.js",
-    "start:legacy": "node cli.js",
-    "test": "node --no-experimental-strip-types -e \"import('./cli.js').then(() => console.log('✓ SDK imports successfully'))\"",
+    "start": "node cli.js",
+    "start:auto": "node smart-start.js",
+    "start:v18": "node cli.js",
+    "start:v22": "node --no-experimental-strip-types cli.js",
+    "test": "node -e \"import('./cli.js').then(() => console.log('✓ SDK imports successfully'))\"",
+    "test:sdk": "node -e \"import('@shipany/open-agent-sdk').then(() => console.log('✅ SDK imports successfully'))\"",
+    "test:node18": "bash test-node18.sh || bash test-node18.bat",
     "postinstall": "echo 'Skipping postinstall script for @shipany/open-agent-sdk'"
   },
   "dependencies": {

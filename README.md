@@ -138,6 +138,19 @@ linux-agent/
 
 ## 🛠️ 系统要求
 
+- Node.js >= 18.0.0 (推荐 v18.20.3+)
+- Linux 系统（Ubuntu, CentOS, Debian, Arch 等）
+- ANTHROPIC_API_KEY
+
+### Node.js 版本兼容性
+
+| Node.js 版本 | 兼容性 | 启动命令 |
+|-------------|-------|----------|
+| v18.x - v20.x | ✅ 完全兼容 | `npm start` |
+| v22.x - v24.x | ✅ 完全兼容 | `npm start` (自动适配) |
+
+项目会自动检测你的 Node.js 版本并使用合适的启动参数。
+
 - Node.js 18+
 - Linux 系统（Ubuntu, CentOS, Debian, Arch 等）
 - ANTHROPIC_API_KEY
@@ -216,6 +229,21 @@ create-agent.bat my-new-agent
 - `node_modules/@shipany/open-agent-sdk/dist/ink/components/Box.js`
 - `node_modules/@shipany/open-agent-sdk/dist/ink/components/ScrollBox.js`
 - `node_modules/@shipany/open-agent-sdk/dist/setup-globals.js`
+
+## 🐛 Node.js v18.20.3 兼容性
+
+如果你使用 Node.js v18.20.3，可能会遇到 `.d.ts` 文件导入问题。我们已经提供了自动修复工具：
+
+```bash
+# 运行兼容性测试和修复
+npm run test:node18
+
+# 或手动运行测试脚本
+bash test-node18.sh    # Linux/Mac
+test-node18.bat        # Windows
+```
+
+详细说明请查看 [NODE18-COMPATIBILITY.md](./NODE18-COMPATIBILITY.md)
 
 ## 📝 开发
 
