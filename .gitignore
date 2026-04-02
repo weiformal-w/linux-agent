@@ -2,8 +2,13 @@ node_modules/
 *.log
 .DS_Store
 .env
+# Allow important documentation files
 *.md
 !README.md
+!SDK-FIXES.md
+!NODE18-COMPATIBILITY.md
+!CONTRIBUTING.md
+!create-new-app.md
 session-*.json
 *.json
 !package.json
