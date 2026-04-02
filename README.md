@@ -26,59 +26,39 @@
 
 ## 📦 安装
 
-### ⚠️ 重要：SDK 需要修复
-
-此项目依赖的 `@shipany/open-agent-sdk` 有编译问题，需要修复后才能使用。
-
-### 方法 1: 使用自动安装脚本（推荐）
-
-**Linux/Mac:**
-```bash
-git clone https://github.com/weiformal-w/linux-agent.git
-cd linux-agent
-chmod +x install.sh
-./install.sh
-```
-
-**Windows:**
-```cmd
-git clone https://github.com/weiformal-w/linux-agent.git
-cd linux-agent
-install.bat
-```
-
-### 方法 2: 手动安装
+### ✅ 现在可以直接使用，无需任何修复！
 
 ```bash
 # 1. 克隆仓库
 git clone https://github.com/weiformal-w/linux-agent.git
 cd linux-agent
 
-# 2. 临时修改 .npmrc 允许脚本运行
-echo "ignore-scripts=false" > .npmrc
-
-# 3. 安装依赖
+# 2. 安装依赖
 npm install
 
-# 4. 运行修复脚本
-node fix-sdk.js
-
-# 5. 验证修复
-npm run test:sdk
-
-# 6. 启动
+# 3. 启动应用
 npm start
 ```
 
-### 📝 修复说明
+### 🎯 技术说明
 
-如果启动时遇到 `.d.ts` 导入错误，运行：
+**问题**: `@shipany/open-agent-sdk` 原始版本有编译问题（在 JS 文件中错误导入了 .d.ts 文件）
+
+**解决**: 本仓库已包含修复后的 SDK 文件，开箱即用！修复文件包括：
+- `Box.js` - 已移除错误的 .d.ts 导入
+- `ScrollBox.js` - 已移除错误的 .d.ts 导入  
+- `setup-globals.js` - 已添加 Node.js semver 支持
+
+### 📝 如果遇到问题
+
+如果 `npm install` 后仍然出现问题，可以运行：
 
 ```bash
-node fix-sdk.js
+npm run fix    # 重新应用修复
+npm start      # 启动应用
 ```
 
-详细修复说明请查看 [FIX-GUIDE.md](./FIX-GUIDE.md)
+详细技术说明请查看 [FIX-GUIDE.md](./FIX-GUIDE.md)
 
 ## 🚀 使用指南
 
